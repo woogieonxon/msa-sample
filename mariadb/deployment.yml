@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+spec:
+  selector:
+    matchLabels:
+      app: mariadb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - image: docker.io/library/mariadb:11.4
+        name: mariadb
+        ports:
+        - containerPort: 3306
+          name: mariadb
+        volumeMounts:
+        - name: mariadb-persistent-storage
+          mountPath: /docker-entrypoint-initdb.d
+        - mountPath: /var/lib/mysql
+          subPath: "mysql"
+          name: mariadb-data
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secret
+              key: DB_PASSWORD
+        - name: MYSQL_DATABASE
+          value: "openlab"
+        - name: MYSQL_USER
+          valueFrom:
+            configMapKeyRef:
+              name: kpaas-msa-configmap
+              key: DB_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secret
+              key: DB_PASSWORD
+      volumes:
+      - name: mariadb-persistent-storage
+        configMap:
+          name: mariadb-initdb-config
+      - name: mariadb-data
+        persistentVolumeClaim:
+          claimName: mariadb-pv-claim

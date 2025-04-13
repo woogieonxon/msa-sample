@@ -1,26 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ${DEPLOYMENT_NAME}
+  name: msa-sample-gateway
   labels:
-    app: ${APP_NAME}
-  namespace: default
+    app: msa-sample-gateway
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ${APP_NAME}
+      app: msa-sample-gateway
       tier: backend
   template:
     metadata:
       labels:
-        app: ${APP_NAME}
+        app: msa-sample-gateway
         tier: backend
     spec:
       containers:
-        - name: ${APP_NAME}
+        - name: msa-sample-gateway
           image: ${IMAGE}:${BEFOREJOB_BUILD_NUMBER}
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: "256Mi"

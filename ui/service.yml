@@ -1,19 +1,18 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: ${SERVICE_NAME}
+  name: msa-sample-ui
   labels:
-    app: ${APP_NAME}
+    app: msa-sample-ui
     tier: backend
-  namespace: default
 spec:
   type: NodePort
   selector:
-    app: ${APP_NAME}
+    app: msa-sample-ui
     tier: backend
   ports:
     - protocol: TCP
       port: 8081
       targetPort: 8081
       nodePort: 30011
-      name: ${APP_NAME}
+      name: msa-sample-ui

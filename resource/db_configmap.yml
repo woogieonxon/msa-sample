@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mariadb-initdb-config
+data:
+  01-create_database.sql: |
+    CREATE DATABASE IF NOT EXISTS openlab;
+    USE openlab;
+  02-create_tables.sql: |
+    USE openlab;
+    CREATE TABLE IF NOT EXISTS name_data (
+      no INT AUTO_INCREMENT PRIMARY KEY,
+      data1 VARCHAR(256),
+      data2 VARCHAR(256)
+    );
+    
+    INSERT INTO name_data (data1, data2) VALUES 
+    ('K-PaaS is an open cloud platform', 
+    'Developed countries are paying attention to the cloud market');
+    
+    CREATE TABLE IF NOT EXISTS title_data (
+      no INT AUTO_INCREMENT PRIMARY KEY,
+      data1 VARCHAR(256),
+      data2 VARCHAR(256)
+    );
+    
+    INSERT INTO title_data (data1, data2) VALUES 
+    ('Container Platform v1.6.0 Edge', 'Container Platform v1.6.0 Single');

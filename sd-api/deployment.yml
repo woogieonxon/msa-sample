@@ -1,26 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ${DEPLOYMENT_NAME}
+  name: msa-sample-sd-api
   labels:
-    app: ${APP_NAME}
-  namespace: default
+    app: msa-sample-sd-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ${APP_NAME}
+      app: msa-sample-sd-api
       tier: backend
   template:
     metadata:
       labels:
-        app: ${APP_NAME}
+        app: msa-sample-sd-api
         tier: backend
     spec:
       containers:
-        - name: ${APP_NAME}
+        - name: msa-sample-sd-api
           image: ${IMAGE}:${BEFOREJOB_BUILD_NUMBER}
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: "256Mi"
@@ -33,5 +32,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: kpaas-msa-configmap
+            - secretRef:
+                name: mariadb-secret
       imagePullSecrets:
         - name: ${SECRET_NAME}
