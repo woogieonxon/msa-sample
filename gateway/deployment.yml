@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${DEPLOYMENT_NAME}
+  labels:
+    app: ${APP_NAME}
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${APP_NAME}
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: ${APP_NAME}
+        tier: backend
+    spec:
+      containers:
+        - name: ${APP_NAME}
+          image: ${IMAGE}:${BEFOREJOB_BUILD_NUMBER}
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "50m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8083
+          envFrom:
+            - configMapRef:
+                name: kpaas-msa-configmap
+      imagePullSecrets:
+        - name: ${SECRET_NAME}
